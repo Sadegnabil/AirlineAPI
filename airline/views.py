@@ -59,7 +59,7 @@ def findFlight(request):
     if request.method == "GET":
 
         # Parse the JSON data
-        requestData = json.loads(request.body)
+        requestData = json.loads(request.body.decode('utf-8'))
 
         # Find the flights with the right airports
         query = Flight.objects.filter(
@@ -71,7 +71,7 @@ def findFlight(request):
         if len(query) == 0:
             return unavailableReponse("No flight found from {} to {}.".format(requestData["dep_airport"],
                 requestData["dest_airport"]))
-        
+
         # Filter the one that have the right date
         results = []
         for row in query:
@@ -87,7 +87,7 @@ def findFlight(request):
                     (row.departureTime + datetime.timedelta(days=1)).strftime("%d-%m-%Y") == requestData["dep_date"]:
 
                     add = True
-        
+
 
             # If we need to add it
             if add:
@@ -134,7 +134,7 @@ If the request is processed successfully, the server responds with 201 CREATED a
     2. Booking status ("booking_status", string) = "ON_HOLD"
     3. Total price for this booking ("tot_price", number)
 
-If a booking cannot be made for any reason, the server responds with 503 Service Unavailable with 
+If a booking cannot be made for any reason, the server responds with 503 Service Unavailable with
 text/plain payload giving reason.
 """
 @csrf_exempt
@@ -144,7 +144,7 @@ def bookFlight(request):
     if request.method == "POST":
 
         # Parse the JSON data
-        requestData = json.loads(request.body)
+        requestData = json.loads(request.body.decode('utf-8'))
 
 
         # Generate the booking number
@@ -155,7 +155,7 @@ def bookFlight(request):
 
 
         # Create the booking
-        booking = Booking(number=number, 
+        booking = Booking(number=number,
             flight=Flight.objects.filter(id=requestData["flight_id"])[0],
             numberOfSeats=len(requestData["passengers"]),
             status="ONHOLD",
@@ -199,14 +199,14 @@ If no providers are available, the server responds with 503 Service Unavailable 
 payload giving reason.
 """
 def paymentMethods(request):
-    
+
     # Check that we have a GET request
     if request.method == "GET":
 
         # Create the response data
         responseData = []
         for provider in PaymentProvider.objects.all():
-            
+
             responseData.append({  "pay_provider_id": provider.id,
                                     "pay_provider_name": provider.name
                                 })
@@ -237,18 +237,18 @@ If the request is processed successfully, the server responds with 201 CREATED a
     3. Booking number ("booking_num", string)
     4. The provider’s website address (“url” , string)
 
-If the server is unable to process the request for any reason, the server responds with a 503 Service 
+If the server is unable to process the request for any reason, the server responds with a 503 Service
 Unavailable with text/plain payload giving reason.
 """
 @csrf_exempt
 def payForBooking(request):
-    
+
     # Check that we have a POST request
     if request.method == "POST":
 
         # Parse the JSON data
-        requestData = json.loads(request.body)
-        
+        requestData = json.loads(request.body.decode('utf-8'))
+
 
         # Send a request to the Payment Service provider
         paymentProvider = PaymentProvider.objects.get(id=int(requestData["pay_provider_id"]))
@@ -259,13 +259,15 @@ def payForBooking(request):
             "client_ref_num": requestData["booking_num"],
             "amount": booking.numberOfSeats * booking.flight.price
             })
+
         response = requests.post(address + "api/createinvoice/", data=data)
+
 
         # If the response is successful
         if response.status_code == 201:
 
             # Parse JSON data
-            paymentProviderInvoice = json.loads(response.text)
+            paymentProviderInvoice = json.loads(response.body.decode('utf-8'))
 
 
             # Create the invoice in the database
@@ -273,7 +275,7 @@ def payForBooking(request):
                 paymentProviderReferenceNumber=paymentProviderInvoice["payprovider_ref_num"],
                 amount=booking.numberOfSeats * booking.flight.price, isPaid=False,
                 stamp=paymentProviderInvoice["stamp_code"])
-            
+
             airlineInvoice.save()
 
 
@@ -282,7 +284,7 @@ def payForBooking(request):
                 "pay_provider_id": requestData["pay_provider_id"],
                 "invoice_id": paymentProviderInvoice["payprovider_ref_num"],
                 "booking_num": requestData["booking_num"],
-                "url": address   
+                "url": address
             }
 
 
@@ -317,13 +319,13 @@ Service Unavailable with text/plain payload giving reason.
 """
 @csrf_exempt
 def finalizeBooking(request):
-    
+
     # Check that we have a POST request
     if request.method == "POST":
 
         # Parse the JSON data
-        requestData = json.loads(request.body)
-        
+        requestData = json.loads(request.body.decode('utf-8'))
+
         # Compare the stamps
         invoice = Invoice.objects.get(airlineReferenceNumber=requestData["booking_num"])
         if requestData["stamp"] == invoice.stamp:
@@ -371,12 +373,12 @@ If the server is unable to process the request for any reason, the server respon
 Service Unavailable with text/plain payload giving reason.
 """
 def bookingStatus(request):
-    
+
     # Check that we have a GET request
     if request.method == "GET":
 
         # Parse the JSON data
-        requestData = json.loads(request.body)
+        requestData = json.loads(request.body.decode('utf-8'))
 
         # Get the booking
         try:
@@ -424,13 +426,13 @@ Service Unavailable with text/plain payload giving reason.
 """
 @csrf_exempt
 def cancelBooking(request):
-    
+
     # Check that we have a POST request
     if request.method == "POST":
 
         # Parse the JSON data
-        requestData = json.loads(request.body)
-        
+        requestData = json.loads(request.body.decode('utf-8'))
+
         # Get the booking
         try:
             booking = Booking.objects.get(number=requestData["booking_num"])
