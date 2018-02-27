@@ -78,13 +78,13 @@ def findFlight(request):
             add = False
 
             # If it is the exact day
-            if row.departureTime.strftime("%d-%m-%Y") == requestData["dep_date"]:
+            if row.departureTime.strftime("%Y-%m-%d") == requestData["dep_date"]:
                 add = True
 
             # Add close dates if it is flexible
             elif requestData["is_flex"]:
-                if (row.departureTime - datetime.timedelta(days=1)).strftime("%d-%m-%Y") == requestData["dep_date"] or \
-                    (row.departureTime + datetime.timedelta(days=1)).strftime("%d-%m-%Y") == requestData["dep_date"]:
+                if (row.departureTime - datetime.timedelta(days=1)).strftime("%Y-%m-%d") == requestData["dep_date"] or \
+                    (row.departureTime + datetime.timedelta(days=1)).strftime("%Y-%m-%d") == requestData["dep_date"]:
 
                     add = True
 
@@ -393,8 +393,8 @@ def bookingStatus(request):
                                          " (" + booking.flight.departureAirport.name + ")"
             bookingData["dest_airport"] = booking.flight.destinationAirport.country + \
                                          " (" + booking.flight.destinationAirport.name + ")"
-            bookingData["dep_datetime"] = booking.flight.departureTime.strftime("%d-%m-%Y %H:%M")
-            bookingData["arr_datetime"] = booking.flight.arrivalTime.strftime("%d-%m-%Y %H:%M")
+            bookingData["dep_datetime"] = booking.flight.departureTime.strftime("%Y-%m-%d %H:%M")
+            bookingData["arr_datetime"] = booking.flight.arrivalTime.strftime("%Y-%m-%d %H:%M")
             bookingData["duration"] = str(booking.flight.duration)[:-3]
 
 
