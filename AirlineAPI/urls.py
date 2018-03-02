@@ -15,13 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from airline.views import findFlight
-from airline.views import bookFlight
-from airline.views import paymentMethods
-from airline.views import payForBooking
-from airline.views import finalizeBooking
-from airline.views import bookingStatus
-from airline.views import cancelBooking
+from airline.views import *
 
 
 

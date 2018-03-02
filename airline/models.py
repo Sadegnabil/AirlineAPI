@@ -18,12 +18,12 @@ class Airport(models.Model):
 # Flight model used to give the details of a filght
 class Flight(models.Model):
     number = models.CharField(max_length=6, default="unknown")
-    departureAirport = models.ForeignKey(Airport, related_name="departure", on_delete=models.CASCADE)
-    destinationAirport = models.ForeignKey(Airport, related_name="destination", on_delete=models.CASCADE)
+    departureAirport = models.ForeignKey(Airport, related_name="departure", null=True, on_delete=models.SET_NULL)
+    destinationAirport = models.ForeignKey(Airport, related_name="destination", null=True, on_delete=models.SET_NULL)
     departureTime = models.DateTimeField(null=True)
     arrivalTime = models.DateTimeField(null=True)
     duration = models.DurationField()
-    aircraft = models.ForeignKey(Aircraft, on_delete=models.CASCADE)
+    aircraft = models.ForeignKey(Aircraft, null=True, on_delete=models.SET_NULL)
     price = models.FloatField(default=0)
 
 
@@ -38,7 +38,7 @@ class Passenger(models.Model):
 # Booking model used create a booking
 class Booking(models.Model):
     number = models.CharField(primary_key=True, max_length=6, default="unknown")
-    flight = models.ForeignKey(Flight, on_delete=models.CASCADE)
+    flight = models.ForeignKey(Flight, null=True, on_delete=models.SET_NULL)
     numberOfSeats = models.IntegerField(default=0)
     passengers = models.ManyToManyField(Passenger)
     status = models.CharField(max_length=9, default="unknown")
