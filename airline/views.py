@@ -14,6 +14,7 @@ from urllib.parse import urlencode
 
 # Constants
 CHARS = string.ascii_uppercase + string.digits
+HEADER = {"content-type": "application/json"}
 
 
 """
@@ -265,14 +266,14 @@ def payForBooking(request):
         response = session.post(address + "api/login/", 
             data=urlencode({"username": paymentProvider.login, "password": paymentProvider.password}), 
             headers={"content-type": "application/x-www-form-urlencoded"})
-        response = session.post(address + "api/createinvoice/", data=data)
 
+        response = session.post(address + "api/createinvoice/", data=data, headers=HEADER)
 
         # If the response is successful
         if response.status_code == 201:
 
             # Parse JSON data
-            paymentProviderInvoice = json.loads(response.body.decode('utf-8'))
+            paymentProviderInvoice = json.loads(response.text)
 
 
             # Create the invoice in the database
