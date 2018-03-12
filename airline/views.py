@@ -9,6 +9,7 @@ import datetime
 import random
 import string
 import requests
+from urllib.parse import urlencode
 
 
 # Constants
@@ -260,7 +261,11 @@ def payForBooking(request):
             "amount": booking.numberOfSeats * booking.flight.price
             })
 
-        response = requests.post(address + "api/createinvoice/", data=data)
+        session = requests.Session()
+        response = session.post(address + "api/login/", 
+            data=urlencode({"username": paymentProvider.login, "password": paymentProvider.password}), 
+            headers={"content-type": "application/x-www-form-urlencoded"})
+        response = session.post(address + "api/createinvoice/", data=data)
 
 
         # If the response is successful
