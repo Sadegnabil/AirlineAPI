@@ -98,8 +98,8 @@ def findFlight(request):
                 entry = {}
                 entry["flight_id"] = row.id
                 entry["flight_num"] = row.number
-                entry["dep_airport"] = Airport.objects.filter(name=requestData["dep_airport"]).values()[0].name
-                entry["dest_airport"] = Airport.objects.filter(name=requestData["dest_airport"]).values()[0].name
+                entry["dep_airport"] = Airport.objects.filter(name=requestData["dep_airport"]).values()[0]["name"]
+                entry["dest_airport"] = Airport.objects.filter(name=requestData["dest_airport"]).values()[0]["name"]
                 entry["dep_datetime"] = row.departureTime
                 entry["arr_datetime"] = row.arrivalTime
                 entry["duration"] = row.duration.seconds
