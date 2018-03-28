@@ -112,7 +112,7 @@ def findFlight(request):
             return unavailableReponse("No flight found for this date.")
 
         # Return JSON data
-        return JsonResponse(results, safe=False)
+        return JsonResponse({"flights": results})
 
     # Return 503 Service Unavailable
     return unavailableReponse("Error processing the request.")
