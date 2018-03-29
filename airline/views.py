@@ -102,7 +102,7 @@ def findFlight(request):
                 entry["dest_airport"] = Airport.objects.filter(name=requestData["dest_airport"]).values()[0]["name"]
                 entry["dep_datetime"] = row.departureTime
                 entry["arr_datetime"] = row.arrivalTime
-                entry["duration"] = row.duration.seconds
+                entry["duration"] = str(row.duration)
                 entry["price"] = row.price
                 results.append(entry)
 
