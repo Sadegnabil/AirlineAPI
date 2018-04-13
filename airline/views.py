@@ -65,8 +65,8 @@ def findFlight(request):
 
         # Find the flights with the right airports
         query = Flight.objects.filter(
-            departureAirport__name=requestData["dep_airport"],
-            destinationAirport__name=requestData["dest_airport"]
+            departureAirport__name__contains=requestData["dep_airport"],
+            destinationAirport__name__contains=requestData["dest_airport"]
         )
 
         # If we don't have any result for the query
