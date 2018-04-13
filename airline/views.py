@@ -218,7 +218,7 @@ def paymentMethods(request):
             return unavailableReponse("No payment provider available.")
 
         # Return JSON data
-        return JsonResponse(responseData, safe=False)
+        return JsonResponse({"pay_providers": responseData})
 
     # Return 503 Service Unavailable
     return unavailableReponse("Error processing the request.")
