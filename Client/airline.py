@@ -10,9 +10,10 @@ SERVER = 'http://directory.pythonanywhere.com'
 HEADER = {"content-type": "application/json"}
 
 
+
 """
 Function used to welcome the user and choose what to do
-Returns an int representing the option selected
+    RETURNS: Integer representing the option selected
 """
 def airlineOptions():
 
@@ -140,7 +141,6 @@ def searchFlight(requestData):
         response = requests.get(airline["url"] + "/api/findflight/", data=json.dumps(requestData), headers=HEADER)
 
         try:
-            # Display the flights
             responseData = json.loads(response.text)
 
             # Add the url and company code
@@ -167,6 +167,7 @@ def searchFlight(requestData):
             print(" _________________________________________________________________________")
             print("|\n|\tFlight {}\n|".format(index))
             print("|\tFlight number: {}".format(row["flight_num"]))
+            print("|\tCompany: {}".format(row["company_code"]))
             print("|\tTakes off from {} at {}.".format(row["dep_airport"], row["dep_datetime"]))
             print("|\tLands in {} at {}.".format(row["dest_airport"], row["arr_datetime"]))
             print("|\tFlight duration: {} hours.".format(row["duration"]))

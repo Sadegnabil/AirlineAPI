@@ -14,13 +14,12 @@ HEADER = {"content-type": "application/json"}
 
 """
 Function used to welcome the user and choose what to do
-Returns an int representing the option selected
+    RETURNS: Integer representing the option selected
 """
 def greetings():
 
     # Display the options
     print("\n** Main menu **\n")
-
     print(" 1. Access a specific company")
     print(" 2. Search for a flight")
     print(" 0. Exit")
@@ -55,6 +54,7 @@ Function used to get the list of companies
 """
 def companiesList():
 
+    # Display the options
     print("\n-------------------------")
     print("Select a company type\n")
     print(" 1. Airlines")
@@ -132,8 +132,6 @@ def companiesList():
     else:
         print("Error loading the list of companies")
         return None
-
-
 
 
 

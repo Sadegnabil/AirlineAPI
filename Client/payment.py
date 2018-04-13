@@ -11,6 +11,11 @@ HEADER = {"content-type": "application/json"}
 session = requests.Session()
 
 
+
+"""
+Function used to display the payment provider options
+    RETURNS: An integer representing the choice selected
+"""
 def paymentOptions():
 
     # Display the options
@@ -53,6 +58,10 @@ def paymentOptions():
 
 
 
+"""
+Function used to prompt the login data
+    RETURNS: A dictionnary containing the data
+"""
 def loginData():
 
     # Get the username and password of the user
@@ -74,6 +83,10 @@ def loginData():
 
 
 
+"""
+Function used to prompt the register data
+    RETURNS: A dictionnary containing the data
+"""
 def getRegisterDetails():
 
     print("\nCustomer details\n")
@@ -101,7 +114,6 @@ def getRegisterDetails():
 
                 return data
 
-
             else:
                 print("Please enter a valid input.")
 
@@ -112,6 +124,10 @@ def getRegisterDetails():
 
 
 
+"""
+Function used to prompt the deposit data
+    RETURNS: A dictionnary containing the data
+"""
 def depositData():
 
     data = {}
@@ -129,7 +145,6 @@ def depositData():
 
                 return data
 
-
             else:
                 print("Please enter a valid input.")
 
@@ -140,6 +155,10 @@ def depositData():
 
 
 
+"""
+Function used to prompt the transfer data
+    RETURNS: A dictionnary containing the data
+"""
 def transferData():
 
     data = {}
@@ -158,7 +177,6 @@ def transferData():
 
                 return data
 
-
             else:
                 print("Please enter a valid input.")
 
@@ -169,6 +187,10 @@ def transferData():
 
 
 
+"""
+Function used to prompt the invoice data
+    RETURNS: A dictionnary containing the data
+"""
 def createInvoiceData():
     
     data = {}
@@ -187,7 +209,6 @@ def createInvoiceData():
 
                 return data
 
-
             else:
                 print("Please enter a valid input.")
 
@@ -198,6 +219,10 @@ def createInvoiceData():
 
 
 
+"""
+Function used to prompt the invoice data
+    RETURNS: A dictionnary containing the data
+"""
 def payInvoiceData():
     
     data = {}
@@ -216,7 +241,6 @@ def payInvoiceData():
 
                 return data
 
-
             else:
                 print("Please enter a valid input.")
 
@@ -227,6 +251,10 @@ def payInvoiceData():
 
 
 
+"""
+Function used to prompt the statement data
+    RETURNS: A dictionnary containing the data
+"""
 def statementData():
     
     data = {}
@@ -237,9 +265,7 @@ def statementData():
 
         # Verify the input
         try:
-
             if len(data["account_num"]) > 1:
-
                 return data
 
             else:
@@ -252,6 +278,11 @@ def statementData():
 
 
 
+"""
+Function used to interact with a payment provider
+    ARGUMENTS:  choice  An integer representing the selected option
+                company The data representing the company selected
+"""
 def paymentManager(choice, company):
 
     # Login
@@ -380,7 +411,7 @@ def paymentManager(choice, company):
         
         data = createInvoiceData()
         response = session.post(company["url"] + "/api/createinvoice/", data=json.dumps(data), headers=HEADER)
-        print(response.status_code)
+
         # If the request is successful
         if response.status_code == 201:
 
