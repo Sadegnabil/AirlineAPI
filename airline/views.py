@@ -98,10 +98,10 @@ def findFlight(request):
                 entry = {}
                 entry["flight_id"] = row.id
                 entry["flight_num"] = row.number
-                entry["dep_airport"] = Airport.objects.filter(name=requestData["dep_airport"]).values()[0]["name"]
-                entry["dest_airport"] = Airport.objects.filter(name=requestData["dest_airport"]).values()[0]["name"]
-                entry["dep_datetime"] = row.departureTime
-                entry["arr_datetime"] = row.arrivalTime
+                entry["dep_airport"] = Airport.objects.filter(name__contains=requestData["dep_airport"]).values()[0]["name"]
+                entry["dest_airport"] = Airport.objects.filter(name__contains=requestData["dest_airport"]).values()[0]["name"]
+                entry["dep_datetime"] = row.departureTime.strftime("%H:%M")
+                entry["arr_datetime"] = row.arrivalTime.strftime("%H:%M")
                 entry["duration"] = str(row.duration)
                 entry["price"] = row.price
                 results.append(entry)
@@ -263,8 +263,8 @@ def payForBooking(request):
             })
 
         session = requests.Session()
-        response = session.post(address + "api/login/", 
-            data=urlencode({"username": paymentProvider.login, "password": paymentProvider.password}), 
+        response = session.post(address + "api/login/",
+            data=urlencode({"username": paymentProvider.login, "password": paymentProvider.password}),
             headers={"content-type": "application/x-www-form-urlencoded"})
 
         response = session.post(address + "api/createinvoice/", data=data, headers=HEADER)
