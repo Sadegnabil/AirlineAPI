@@ -96,7 +96,7 @@ def findFlight(request):
 
                 # Create the entry
                 entry = {}
-                entry["flight_id"] = row.id
+                entry["flight_id"] = row.number
                 entry["flight_num"] = row.number
                 entry["dep_airport"] = Airport.objects.filter(name__contains=requestData["dep_airport"]).values()[0]["name"]
                 entry["dest_airport"] = Airport.objects.filter(name__contains=requestData["dest_airport"]).values()[0]["name"]
