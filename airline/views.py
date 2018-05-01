@@ -145,43 +145,47 @@ def bookFlight(request):
     # Check that we have a POST request
     if request.method == "POST":
 
-        # Parse the JSON data
-        requestData = json.loads(request.body.decode('utf-8'))
+        try:
+            # Parse the JSON data
+            requestData = json.loads(request.body.decode('utf-8'))
 
 
-        # Generate the booking number
-        number = ''.join(random.choice(CHARS) for _ in range(6))
-
-        while Booking.objects.filter(number=number).count() > 0:
+            # Generate the booking number
             number = ''.join(random.choice(CHARS) for _ in range(6))
 
+            while Booking.objects.filter(number=number).count() > 0:
+                number = ''.join(random.choice(CHARS) for _ in range(6))
 
-        # Create the booking
-        booking = Booking(number=number,
-            flight=Flight.objects.filter(id=requestData["flight_id"])[0],
-            numberOfSeats=len(requestData["passengers"]),
-            status="ONHOLD",
-            expiration=datetime.datetime.now() + datetime.timedelta(days=1))
 
-        booking.save()
+            # Create the booking
+            booking = Booking(number=number,
+                flight=Flight.objects.filter(id=requestData["flight_id"])[0],
+                numberOfSeats=len(requestData["passengers"]),
+                status="ONHOLD",
+                expiration=datetime.datetime.now() + datetime.timedelta(days=1))
 
-        # Add the passengers
-        for passenger in requestData["passengers"]:
-            currentPassenger = Passenger(firstName=passenger["first_name"],
-                surname=passenger["surname"], email=passenger["email"],
-                phoneNumber=passenger["phone"])
-            currentPassenger.save()
-            booking.passengers.add(currentPassenger)
+            booking.save()
 
-        booking.save()
+            # Add the passengers
+            for passenger in requestData["passengers"]:
+                currentPassenger = Passenger(firstName=passenger["first_name"],
+                    surname=passenger["surname"], email=passenger["email"],
+                    phoneNumber=passenger["phone"])
+                currentPassenger.save()
+                booking.passengers.add(currentPassenger)
 
-        responseData = {}
-        responseData["booking_num"] = booking.number
-        responseData["booking_status"] = booking.status
-        responseData["tot_price"] = booking.flight.price * booking.numberOfSeats
+            booking.save()
 
-        # Return JSON data
-        return JsonResponse(responseData, status=201)
+            responseData = {}
+            responseData["booking_num"] = booking.number
+            responseData["booking_status"] = booking.status
+            responseData["tot_price"] = booking.flight.price * booking.numberOfSeats
+
+            # Return JSON data
+            return JsonResponse(responseData, status=201)
+
+        except Exception as e:
+            return unavailableReponse("Error processing the request.")
 
     # Return 503 Service Unavailable
     return unavailableReponse("Error processing the request.")
